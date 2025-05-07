@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My GitHub Showcase</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f6f8fa;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 0;
+            background-color: #24292e;
+            color: white;
+            border-radius: 8px;
+        }
+        h1 {
+            margin: 0;
+        }
+        .subheader {
+            font-size: 18px;
+            opacity: 0.8;
+            margin-top: 10px;
+        }
+        .repos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .repo-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+        .repo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .repo-card h2 {
+            margin-top: 0;
+            color: #0366d6;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .repo-description {
+            color: #586069;
+            margin-bottom: 15px;
+            min-height: 50px;
+        }
+        .repo-stats {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            color: #586069;
+            font-size: 14px;
+        }
+        .repo-stat {
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .repo-stat svg {
+            margin-right: 5px;
+        }
+        .repo-language {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        .language-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        .repo-buttons {
+            display: flex;
+        }
+        .repo-button {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+            margin-right: 10px;
+            transition: background-color 0.2s;
+        }
+        .view-btn {
+            background-color: #0366d6;
+            color: white;
+        }
+        .view-btn:hover {
+            background-color: #0255b3;
+        }
+        .download-btn {
+            background-color: #2ea44f;
+            color: white;
+        }
+        .download-btn:hover {
+            background-color: #2c974b;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            overflow: auto;
+        }
+        .modal-content {
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 25px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e1e4e8;
+        }
+        .close {
+            color: #586069;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: #24292e;
+        }
+        .readme {
+            padding: 15px;
+            background-color: #f6f8fa;
+            border-radius: 6px;
+            border: 1px solid #e1e4e8;
+            margin-top: 20px;
+        }
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            background-color: #f6f8fa;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+            font-size: 85%;
+        }
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            padding: 20px;
+            color: #586069;
+            font-size: 14px;
+        }
+        .loading {
+            text-align: center;
+            margin: 50px 0;
+            color: #586069;
+        }
+        .error {
+            color: #cb2431;
+            padding: 15px;
+            background-color: #ffeef0;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>My GitHub Showcase</h1>
+        <div class="subheader">A collection of my featured projects</div>
+    </header>
+
+    <div id="repos-container" class="repos-grid">
+        <div class="loading">Loading featured repositories...</div>
+    </div>
+
+    <div id="repo-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title"></h2>
+                <span class="close">&times;</span>
+            </div>
+            <div id="modal-content">
+                <!-- Repository details and README will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; <span id="current-year"></span> - My GitHub Showcase
+    </footer>
+
+    <script>
+        // Set the current year in the footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // Your GitHub username
+        const username = 'YOUR_GITHUB_USERNAME';
+        
+        // List of repositories to showcase (add your repository names here)
+        const showcaseRepos = [
+            'repo-name-1',
+            'repo-name-2',
+            'repo-name-3'
+            // Add more repository names as needed
+        ];
+
+        // Language color mapping
+        const languageColors = {
+            'JavaScript': '#f1e05a',
+            'TypeScript': '#2b7489',
+            'HTML': '#e34c26',
+            'CSS': '#563d7c',
+            'Python': '#3572A5',
+            'Java': '#b07219',
+            'C#': '#178600',
+            'PHP': '#4F5D95',
+            'Ruby': '#701516',
+            'Go': '#00ADD8',
+            'C++': '#f34b7d',
+            'C': '#555555',
+            'Shell': '#89e051',
+            'Rust': '#dea584',
+            'Swift': '#ffac45',
+            'Kotlin': '#F18E33',
+            'Dart': '#00B4AB',
+            'Vue': '#2c3e50',
+            'React': '#61dafb'
+        };
+
+        // Modal elements
+        const modal = document.getElementById('repo-modal');
+        const closeBtn = document.getElementsByClassName('close')[0];
+
+        // Close the modal when clicking the close button
+        closeBtn.onclick = function() {
+            modal.style.display = 'none';
+        }
+
+        // Close the modal when clicking outside of it
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Load repositories when the page loads
+        document.addEventListener('DOMContentLoaded', loadRepositories);
+
+        function loadRepositories() {
+            const reposContainer = document.getElementById('repos-container');
+            const loadingPromises = [];
+
+            reposContainer.innerHTML = '<div class="loading">Loading featured repositories...</div>';
+
+            // Create promises for each repository fetch
+            showcaseRepos.forEach(repoName => {
+                const promise = fetch(`https://api.github.com/repos/${username}/${repoName}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Could not fetch repository: ${repoName}`);
+                        }
+                        return response.json();
+                    });
+                loadingPromises.push(promise);
+            });
+
+            // Wait for all repository data to be fetched
+            Promise.all(loadingPromises)
+                .then(repos => {
+                    reposContainer.innerHTML = '';
+                    
+                    if (repos.length === 0) {
+                        reposContainer.innerHTML = '<div class="error">No repositories found. Please add repository names in the showcaseRepos array.</div>';
+                        return;
+                    }
+
+                    repos.forEach(repo => {
+                        const repoCard = createRepoCard(repo);
+                        reposContainer.appendChild(repoCard);
+                    });
+                })
+                .catch(error => {
+                    reposContainer.innerHTML = `<div class="error">${error.message}</div>`;
+                });
+        }
+
+        function createRepoCard(repo) {
+            const repoCard = document.createElement('div');
+            repoCard.className = 'repo-card';
+            
+            // Language color
+            const languageColor = repo.language && languageColors[repo.language] 
+                ? languageColors[repo.language] 
+                : '#bbbbbb';
+            
+            repoCard.innerHTML = `
+                <h2>${repo.name}</h2>
+                <div class="repo-description">${repo.description || 'No description available.'}</div>
+                
+                <div class="repo-stats">
+                    <div class="repo-stat">
+                        <svg aria-hidden="true" height="16" viewBox="0 0 16 16" width="16">
+                            <path fill-rule="evenodd" d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25z"></path>
+                        </svg>
+                        ${repo.stargazers_count}
+                    </div>
+                    <div class="repo-stat">
+                        <svg aria-hidden="true" height="16" viewBox="0 0 16 16" width="16">
+                            <path fill-rule="evenodd" d="M5 3.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm0 2.122a2.25 2.25 0 10-1.5 0v.878A2.25 2.25 0 005.75 8.5h1.5v2.128a2.251 2.251 0 101.5 0V8.5h1.5a2.25 2.25 0 002.25-2.25v-.878a2.25 2.25 0 10-1.5 0v.878a.75.75 0 01-.75.75h-4.5A.75.75 0 015 6.25v-.878zm3.75 7.378a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm3-8.75a.75.75 0 100-1.5.75.75 0 000 1.5z"></path>
+                        </svg>
+                        ${repo.forks_count}
+                    </div>
+                </div>
+                
+                ${repo.language ? `
+                <div class="repo-language">
+                    <div class="language-color" style="background-color: ${languageColor}"></div>
+                    ${repo.language}
+                </div>` : ''}
+                
+                <div class="repo-buttons">
+                    <a href="javascript:void(0)" class="repo-button view-btn" onclick="openRepoModal('${repo.name}')">View Details</a>
+                    <a href="${repo.html_url}/archive/refs/heads/main.zip" class="repo-button download-btn" download>Download</a>
+                </div>
+            `;
+            
+            return repoCard;
+        }
+
+        function openRepoModal(repoName) {
+            const modalTitle = document.getElementById('modal-title');
+            const modalContent = document.getElementById('modal-content');
+            
+            modalTitle.textContent = repoName;
+            modalContent.innerHTML = '<div class="loading">Loading repository details...</div>';
+            modal.style.display = 'block';
+            
+            // Get repo README
+            fetch(`https://api.github.com/repos/${username}/${repoName}/readme`)
+                .then(response => {
+                    if (!response.ok) {
+                        return { content: null };
+                    }
+                    return response.json();
+                })
+                .then(readmeData => {
+                    let readmeContent = '';
+                    
+                    if (readmeData && readmeData.content) {
+                        // Decode base64 content
+                        readmeContent = atob(readmeData.content.replace(/\n/g, ''));
+                    }
+
+                    modalContent.innerHTML = `
+                        <p>
+                            <a href="${`https://github.com/${username}/${repoName}`}" target="_blank" style="color: #0366d6; text-decoration: none;">
+                                View on GitHub
+                            </a>
+                        </p>
+                        <div class="readme">
+                            <h3>README</h3>
+                            ${readmeContent ? `<pre><code>${escapeHtml(readmeContent)}</code></pre>` : '<p>No README found for this repository.</p>'}
+                        </div>
+                    `;
+                })
+                .catch(error => {
+                    modalContent.innerHTML = `<div class="error">Error loading repository content: ${error.message}</div>`;
+                });
+        }
+
+        function escapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>
