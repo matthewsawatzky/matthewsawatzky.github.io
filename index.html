@@ -1,719 +1,83 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello Repos!</title>
-    <style>
-        :root {
-            --bg-color: #f6f8fa;
-            --bg-elevated: #ffffff;
-            --text-color: #24292e;
-            --muted-text: #586069;
-            --border-color: #e1e4e8;
-            --header-bg: #24292e;
-            --header-text: #ffffff;
-            --accent: #0366d6;
-            --accent-hover: #0255b3;
-            --accent-success: #2ea44f;
-            --accent-success-hover: #2c974b;
-            --error-bg: #ffeef0;
-            --error-text: #cb2431;
-            --code-bg: #f6f8fa;
-            --overlay-bg: rgba(0, 0, 0, 0.7);
-            --shadow-soft: 0 2px 10px rgba(0,0,0,0.08);
-            --shadow-hover: 0 5px 20px rgba(0,0,0,0.16);
-        }
-
-        html[data-theme="dark"] {
-            --bg-color: #0d1117;
-            --bg-elevated: #161b22;
-            --text-color: #e6edf3;
-            --muted-text: #8b949e;
-            --border-color: #30363d;
-            --header-bg: #161b22;
-            --header-text: #f0f6fc;
-            --accent: #58a6ff;
-            --accent-hover: #1f6feb;
-            --accent-success: #2ea043;
-            --accent-success-hover: #238636;
-            --error-bg: #2d1215;
-            --error-text: #ff7b72;
-            --code-bg: #0d1117;
-            --overlay-bg: rgba(0, 0, 0, 0.8);
-            --shadow-soft: 0 2px 10px rgba(0,0,0,0.5);
-            --shadow-hover: 0 5px 25px rgba(0,0,0,0.7);
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-            line-height: 1.6;
-            color: var(--text-color);
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: var(--bg-color);
-            transition: background-color 0.2s ease, color 0.2s ease;
-        }
-
-        header {
-            margin-bottom: 40px;
-            border-radius: 12px;
-            padding: 24px 24px 28px;
-            background: var(--header-bg);
-            color: var(--header-text);
-            box-shadow: var(--shadow-soft);
-        }
-
-        .header-inner {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            flex-wrap: wrap;
-        }
-
-        .header-text {
-            min-width: 0;
-        }
-
-        h1 {
-            margin: 0;
-            font-size: 28px;
-        }
-
-        .subheader {
-            font-size: 16px;
-            opacity: 0.9;
-            margin-top: 8px;
-        }
-
-        .theme-toggle-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .theme-toggle-label {
-            font-size: 13px;
-            opacity: 0.8;
-        }
-
-        .theme-toggle-button {
-            position: relative;
-            width: 54px;
-            height: 28px;
-            border-radius: 999px;
-            border: 1px solid rgba(255,255,255,0.3);
-            background: rgba(0,0,0,0.25);
-            display: inline-flex;
-            align-items: center;
-            padding: 2px;
-            cursor: pointer;
-            transition: background 0.2s ease, border-color 0.2s ease;
-        }
-
-        html[data-theme="light"] .theme-toggle-button {
-            background: rgba(255,255,255,0.15);
-            border-color: rgba(255,255,255,0.4);
-        }
-
-        .theme-toggle-thumb {
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 13px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.25);
-            transform: translateX(0);
-            transition: transform 0.2s ease;
-        }
-
-        html[data-theme="dark"] .theme-toggle-thumb {
-            transform: translateX(24px);
-        }
-
-        .theme-toggle-track {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 6px;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            pointer-events: none;
-        }
-
-        .theme-toggle-track span {
-            opacity: 0.6;
-        }
-
-        html[data-theme="light"] .theme-toggle-track .label-light,
-        html[data-theme="dark"] .theme-toggle-track .label-dark {
-            opacity: 1;
-        }
-
-        .repos-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-            gap: 20px;
-        }
-
-        .repo-card {
-            background-color: var(--bg-elevated);
-            border-radius: 10px;
-            box-shadow: var(--shadow-soft);
-            padding: 20px 18px;
-            transition: transform 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease, border-color 0.18s ease;
-            cursor: pointer;
-            border: 1px solid var(--border-color);
-        }
-
-        .repo-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-hover);
-        }
-
-        .repo-header {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 12px;
-        }
-
-        .repo-card h2 {
-            margin: 0;
-            font-size: 18px;
-            word-break: break-word;
-        }
-
-        .repo-description {
-            color: var(--muted-text);
-            margin: 10px 0 16px;
-            min-height: 48px;
-            font-size: 14px;
-        }
-
-        .repo-stats {
-            display: flex;
-            align-items: center;
-            margin-bottom: 12px;
-            color: var(--muted-text);
-            font-size: 13px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .repo-stat {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .repo-stat svg {
-            flex-shrink: 0;
-            fill: currentColor;
-        }
-
-        .repo-language {
-            display: flex;
-            align-items: center;
-            font-size: 13px;
-            margin-bottom: 14px;
-            color: var(--muted-text);
-            gap: 6px;
-        }
-
-        .language-color {
-            width: 10px;
-            height: 10px;
-            border-radius: 999px;
-        }
-
-        .repo-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .repo-button {
-            padding: 7px 14px;
-            border-radius: 999px;
-            font-size: 13px;
-            font-weight: 500;
-            text-decoration: none;
-            text-align: center;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            border: 1px solid transparent;
-            transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
-        }
-
-        .repo-button:active {
-            transform: translateY(1px);
-        }
-
-        .view-btn {
-            background-color: var(--accent);
-            color: #ffffff;
-        }
-
-        .view-btn:hover {
-            background-color: var(--accent-hover);
-        }
-
-        .download-btn {
-            background-color: transparent;
-            color: var(--accent-success);
-            border-color: rgba(46,164,79,0.4);
-        }
-
-        html[data-theme="dark"] .download-btn {
-            border-color: rgba(46,160,67,0.6);
-        }
-
-        .download-btn:hover {
-            background-color: rgba(46,164,79,0.1);
-            color: var(--accent-success-hover);
-            border-color: var(--accent-success-hover);
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 100;
-            inset: 0;
-            background-color: var(--overlay-bg);
-            overflow: auto;
-        }
-
-        .modal-content {
-            background-color: var(--bg-elevated);
-            margin: 4% auto;
-            padding: 24px 24px 26px;
-            border-radius: 12px;
-            width: calc(100% - 40px);
-            max-width: 900px;
-            max-height: 86vh;
-            overflow-y: auto;
-            box-shadow: var(--shadow-hover);
-            border: 1px solid var(--border-color);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 18px;
-            padding-bottom: 14px;
-            border-bottom: 1px solid var(--border-color);
-            gap: 16px;
-        }
-
-        .modal-header h2 {
-            margin: 0;
-            font-size: 20px;
-        }
-
-        .close {
-            color: var(--muted-text);
-            font-size: 26px;
-            font-weight: 500;
-            cursor: pointer;
-            line-height: 1;
-        }
-
-        .close:hover {
-            color: var(--text-color);
-        }
-
-        .readme {
-            padding: 16px 16px 18px;
-            background-color: var(--bg-color);
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            margin-top: 16px;
-            font-size: 14px;
-        }
-
-        .readme h3 {
-            margin-top: 0;
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-
-        pre {
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            background-color: var(--code-bg);
-            padding: 12px 14px;
-            border-radius: 6px;
-            overflow-x: auto;
-            border: 1px solid var(--border-color);
-        }
-
-        code {
-            font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
-            font-size: 85%;
-        }
-
-        footer {
-            margin-top: 40px;
-            text-align: center;
-            padding: 16px 0 10px;
-            color: var(--muted-text);
-            font-size: 13px;
-        }
-
-        .loading {
-            text-align: center;
-            margin: 50px 0;
-            color: var(--muted-text);
-            font-size: 14px;
-        }
-
-        .error {
-            color: var(--error-text);
-            padding: 12px 14px;
-            background-color: var(--error-bg);
-            border-radius: 8px;
-            margin: 18px 0;
-            font-size: 14px;
-            border: 1px solid rgba(203,36,49,0.25);
-        }
-
-        .link-inline {
-            color: var(--accent);
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .link-inline:hover {
-            text-decoration: underline;
-        }
-
-        @media (max-width: 600px) {
-            body {
-                padding: 16px 14px 22px;
-            }
-            header {
-                padding: 18px 16px 20px;
-            }
-            h1 {
-                font-size: 22px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Matthew Sawatzky | GitHub Showcase</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.5/dist/purify.min.js"></script>
 </head>
 <body>
-    <header>
-        <div class="header-inner">
-            <div class="header-text">
-                <h1>Hello Repos</h1>
-                <div class="subheader">Some projects I have worked on</div>
-            </div>
-            <div class="theme-toggle-wrapper">
-                <span class="theme-toggle-label">Theme</span>
-                <button id="theme-toggle" type="button" class="theme-toggle-button" aria-label="Toggle dark mode">
-                    <div class="theme-toggle-track">
-                        <span class="label-light">Light</span>
-                        <span class="label-dark">Dark</span>
-                    </div>
-                    <div class="theme-toggle-thumb">
-                        <span class="theme-toggle-icon" aria-hidden="true">☀️</span>
-                    </div>
-                </button>
-            </div>
-        </div>
-    </header>
+  <div class="bg-glow bg-glow--one"></div>
+  <div class="bg-glow bg-glow--two"></div>
 
-    <div id="repos-container" class="repos-grid">
-        <div class="loading">Loading featured repositories…</div>
+  <header class="hero">
+    <div>
+      <div class="eyebrow">Matthew Sawatzky · GitHub</div>
+      <h1>Building things worth shipping.</h1>
+      <p class="lede">A fast, personal snapshot of projects I'm creating or supporting. Updated by text files, rendered live on GitHub Pages.</p>
+      <div class="hero__links">
+        <a href="https://github.com/matthewsawatzky" target="_blank" rel="noreferrer">GitHub</a>
+        <a href="mailto:matthewsawatzky@gmail.com">Email</a>
+        <a href="https://www.linkedin.com/in/matthewsawatzky" target="_blank" rel="noreferrer">LinkedIn</a>
+      </div>
     </div>
-
-    <div id="repo-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modal-title"></h2>
-                <span class="close" aria-label="Close modal">&times;</span>
-            </div>
-            <div id="modal-content">
-                <!-- Repository details and README will be loaded here -->
-            </div>
-        </div>
+    <div class="callout">
+      <p class="callout__label">Update flow</p>
+      <p class="callout__text">Edit <code>post-of-day.md</code> for the daily spotlight and <code>repos.txt</code> to reorder or add repos. No rebuild required.</p>
+      <p class="callout__status" id="global-status"></p>
     </div>
+  </header>
 
-    <footer>
-        &copy; <span id="current-year"></span> · GitHub Repos
-    </footer>
+  <main class="layout">
+    <section class="panel" id="post-panel">
+      <div class="panel__head">
+        <div>
+          <div class="eyebrow">Post of the day</div>
+          <h2 id="post-title">Loading…</h2>
+        </div>
+        <div class="panel__actions" id="post-actions"></div>
+      </div>
+      <div id="post-body" class="post-body">Fetching post…</div>
+    </section>
 
-    <script>
-        // GitHub username and showcase repositories
-        const username = 'matthewsawatzky';
-        const showcaseRepos = [
-            'SystemPull',
-            'LocalFileSharingApp'
-            // Add more repository names as needed
-        ];
+    <section class="panel" id="featured-panel">
+      <div class="panel__head">
+        <div>
+          <div class="eyebrow">Featured six</div>
+          <h2>Projects on the front page</h2>
+        </div>
+        <button class="ghost" id="to-all">Show all</button>
+      </div>
+      <div class="grid" id="featured-grid"></div>
+    </section>
 
-        // Language color mapping
-        const languageColors = {
-            'JavaScript': '#f1e05a',
-            'TypeScript': '#2b7489',
-            'HTML': '#e34c26',
-            'CSS': '#563d7c',
-            'Python': '#3572A5',
-            'Java': '#b07219',
-            'C#': '#178600',
-            'PHP': '#4F5D95',
-            'Ruby': '#701516',
-            'Go': '#00ADD8',
-            'C++': '#f34b7d',
-            'C': '#555555',
-            'Shell': '#89e051',
-            'Rust': '#dea584',
-            'Swift': '#ffac45',
-            'Kotlin': '#F18E33',
-            'Dart': '#00B4AB',
-            'Vue': '#2c3e50',
-            'React': '#61dafb'
-        };
+    <section class="panel" id="all-panel">
+      <div class="panel__head">
+        <div>
+          <div class="eyebrow">Full list</div>
+          <h2>Everything I've added</h2>
+        </div>
+      </div>
+      <div class="grid" id="all-grid"></div>
+    </section>
+  </main>
 
-        // Modal elements
-        const modal = document.getElementById('repo-modal');
-        const closeBtn = document.getElementsByClassName('close')[0];
+  <div class="modal" id="modal" aria-hidden="true">
+    <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button class="modal__close" id="modal-close" aria-label="Close">×</button>
+      <div class="modal__eyebrow" id="modal-tag"></div>
+      <h3 id="modal-title"></h3>
+      <p class="modal__meta" id="modal-meta"></p>
+      <div class="modal__actions" id="modal-actions"></div>
+      <div class="modal__body" id="modal-body">Loading README…</div>
+    </div>
+  </div>
 
-        // Utility: HTML escape
-        function escapeHtml(unsafe) {
-            return unsafe
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
-        }
-
-        // Theme management
-        function applyTheme(theme, persist = true) {
-            const root = document.documentElement;
-            const toggleThumbIcon = document.querySelector('.theme-toggle-icon');
-
-            root.setAttribute('data-theme', theme);
-
-            if (toggleThumbIcon) {
-                toggleThumbIcon.textContent = theme === 'dark' ? '🌙' : '☀️';
-            }
-
-            if (persist) {
-                try {
-                    localStorage.setItem('theme', theme);
-                } catch (e) {
-                    // Ignore storage errors (e.g. private mode)
-                }
-            }
-        }
-
-        function initTheme() {
-            let theme = 'light';
-
-            try {
-                const stored = localStorage.getItem('theme');
-                if (stored === 'light' || stored === 'dark') {
-                    theme = stored;
-                } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                    theme = 'dark';
-                }
-            } catch (e) {
-                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                    theme = 'dark';
-                }
-            }
-
-            applyTheme(theme, false);
-
-            const toggle = document.getElementById('theme-toggle');
-            if (toggle) {
-                toggle.addEventListener('click', () => {
-                    const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-                    const next = current === 'dark' ? 'light' : 'dark';
-                    applyTheme(next);
-                });
-            }
-        }
-
-        // Repo loading
-        function loadRepositories() {
-            const reposContainer = document.getElementById('repos-container');
-            const loadingPromises = [];
-
-            reposContainer.innerHTML = '<div class="loading">Loading featured repositories…</div>';
-
-            showcaseRepos.forEach(repoName => {
-                const promise = fetch(`https://api.github.com/repos/${username}/${repoName}`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`Could not fetch repository: ${repoName}`);
-                        }
-                        return response.json();
-                    });
-                loadingPromises.push(promise);
-            });
-
-            Promise.all(loadingPromises)
-                .then(repos => {
-                    reposContainer.innerHTML = '';
-
-                    if (repos.length === 0) {
-                        reposContainer.innerHTML = '<div class="error">No repositories found. Add repository names to the showcaseRepos array.</div>';
-                        return;
-                    }
-
-                    repos.forEach(repo => {
-                        const repoCard = createRepoCard(repo);
-                        reposContainer.appendChild(repoCard);
-                    });
-                })
-                .catch(error => {
-                    reposContainer.innerHTML = `<div class="error">${escapeHtml(error.message)}</div>`;
-                });
-        }
-
-        function createRepoCard(repo) {
-            const repoCard = document.createElement('div');
-            repoCard.className = 'repo-card';
-
-            const languageColor = repo.language && languageColors[repo.language]
-                ? languageColors[repo.language]
-                : '#bbbbbb';
-
-            repoCard.innerHTML = `
-                <div class="repo-header">
-                    <h2>${escapeHtml(repo.name)}</h2>
-                </div>
-
-                <div class="repo-description">
-                    ${escapeHtml(repo.description || 'No description available.')}
-                </div>
-
-                <div class="repo-stats">
-                    <div class="repo-stat" title="Stars">
-                        <svg aria-hidden="true" height="16" viewBox="0 0 16 16" width="16">
-                            <path fill-rule="evenodd" d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25z"></path>
-                        </svg>
-                        ${repo.stargazers_count}
-                    </div>
-                    <div class="repo-stat" title="Forks">
-                        <svg aria-hidden="true" height="16" viewBox="0 0 16 16" width="16">
-                            <path fill-rule="evenodd" d="M5 3.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm0 2.122a2.25 2.25 0 10-1.5 0v.878A2.25 2.25 0 005.75 8.5h1.5v2.128a2.251 2.251 0 101.5 0V8.5h1.5a2.25 2.25 0 002.25-2.25v-.878a2.25 2.25 0 10-1.5 0v.878a.75.75 0 01-.75.75h-4.5A.75.75 0 015 6.25v-.878zm3.75 7.378a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm3-8.75a.75.75 0 100-1.5.75.75 0 000 1.5z"></path>
-                        </svg>
-                        ${repo.forks_count}
-                    </div>
-                </div>
-
-                ${repo.language ? `
-                <div class="repo-language">
-                    <div class="language-color" style="background-color: ${languageColor}"></div>
-                    ${escapeHtml(repo.language)}
-                </div>` : ''}
-
-                <div class="repo-buttons">
-                    <a href="javascript:void(0)" class="repo-button view-btn" onclick="openRepoModal('${encodeURIComponent(repo.name)}')">
-                        View details
-                    </a>
-                    <a href="${repo.html_url}/archive/refs/heads/main.zip" class="repo-button download-btn">
-                        Download
-                    </a>
-                </div>
-            `;
-
-            // Also allow clicking anywhere on the card to open modal
-            repoCard.addEventListener('click', (event) => {
-                const target = event.target;
-                // Ignore clicks on the actual buttons/links; they already have handlers
-                if (target.closest('.repo-button')) {
-                    return;
-                }
-                openRepoModal(repo.name);
-            });
-
-            return repoCard;
-        }
-
-        function openRepoModal(rawRepoName) {
-            const repoName = decodeURIComponent(rawRepoName);
-            const modalTitle = document.getElementById('modal-title');
-            const modalContent = document.getElementById('modal-content');
-
-            modalTitle.textContent = repoName;
-            modalContent.innerHTML = '<div class="loading">Loading repository details…</div>';
-            modal.style.display = 'block';
-
-            fetch(`https://api.github.com/repos/${username}/${encodeURIComponent(repoName)}/readme`)
-                .then(response => {
-                    if (!response.ok) {
-                        return { content: null };
-                    }
-                    return response.json();
-                })
-                .then(readmeData => {
-                    let readmeContent = '';
-
-                    if (readmeData && readmeData.content) {
-                        readmeContent = atob(readmeData.content.replace(/\n/g, ''));
-                    }
-
-                    modalContent.innerHTML = `
-                        <p>
-                            <a href="https://github.com/${username}/${encodeURIComponent(repoName)}"
-                               target="_blank"
-                               rel="noopener noreferrer"
-                               class="link-inline">
-                                View on GitHub
-                            </a>
-                        </p>
-                        <div class="readme">
-                            <h3>README</h3>
-                            ${
-                                readmeContent
-                                    ? `<pre><code>${escapeHtml(readmeContent)}</code></pre>`
-                                    : '<p>No README found for this repository.</p>'
-                            }
-                        </div>
-                    `;
-                })
-                .catch(error => {
-                    modalContent.innerHTML = `<div class="error">Error loading repository content: ${escapeHtml(error.message)}</div>`;
-                });
-        }
-
-        // Close modal on close button or overlay click
-        closeBtn.onclick = function () {
-            modal.style.display = 'none';
-        };
-
-        window.onclick = function (event) {
-            if (event.target === modal) {
-                modal.style.display = 'none';
-            }
-        };
-
-        // Init
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('current-year').textContent = new Date().getFullYear();
-            initTheme();
-            loadRepositories();
-        });
-    </script>
+  <script src="script.js" type="module"></script>
 </body>
 </html>

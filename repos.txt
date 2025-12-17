@@ -1,0 +1,10 @@
+# Format: optional_tag | owner/repo
+# Order matters. First 6 entries are the featured grid; all entries appear in the full list.
+# Examples — replace with your own:
+Featured | matthewsawatzky/portfolio-site
+Notable | matthewsawatzky/another-project
+Notable | someoneelse/cool-repo
+# You can omit the tag and just use owner/repo; default tag becomes "Featured".
+# e.g. matthewsawatzky/some-repo
+
+matthewsawatzky/burrowhost.com

@@ -1,0 +1,9 @@
+Title: Today I shipped a new feature
+Link: https://example.com/post
+Source: Blog
+
+Write your post body here in Markdown. You can keep it short, link out, or paste an excerpt from an RSS item.
+- Bullet points work
+- **Bold** and _italics_ too
+
+Swap this file to update the "Post of the day" section without rebuilding the site.
